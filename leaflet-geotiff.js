@@ -300,9 +300,5 @@ L.leafletGeotiff = function (url, options) {
 };
 
 if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
-	module.exports = {
-		leafletGeotiff: L.leafletGeotiff,
-		LeafletGeotiff: L.LeafletGeotiff,
-		LeafletGeoTiffRenderer: L.LeafletGeotiffRenderer
-	};
+	module.exports = L;
 }
