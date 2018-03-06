@@ -18,6 +18,7 @@ L.LeafletGeotiff = L.ImageOverlay.extend({
 		arrowSize: 20,
 		band: 0,
 		image: 0,
+		opacity: 1,
 		renderer: null
 	},
 	
@@ -191,6 +192,7 @@ L.LeafletGeotiff = L.ImageOverlay.extend({
                 plotCanvas.width = size.x;
                 plotCanvas.height = size.y;
                 var ctx = plotCanvas.getContext("2d");
+				ctx.globalAlpha = this.options.opacity;
                 ctx.clearRect(0, 0, plotCanvas.width, plotCanvas.height);
                 this._image.src = plotCanvas.toDataURL();
                 return;
@@ -206,6 +208,7 @@ L.LeafletGeotiff = L.ImageOverlay.extend({
             plotCanvas.width = size.x;
             plotCanvas.height = size.y;
             var ctx = plotCanvas.getContext("2d");
+			ctx.globalAlpha = this.options.opacity;
             ctx.clearRect(0, 0, plotCanvas.width, plotCanvas.height);
 
 			this.options.renderer.render(this.raster, ctx, args);

@@ -30,6 +30,7 @@ Parameters:
     * `bounds` - (optional) An array specifying the corners of the data, e.g. [[40.712216, -74.22655], [40.773941, -74.12544]].  If omitted the image bounds will be read from the geoTIFF file.
     * `band` - (optional, default = 0) geoTIFF band to read.
     * `image` - (optional, default = 0) geoTIFF image to read.
+    * `opacity` - (optional, default = 1) Global opacity value between 0 and 1 (no transparency) that is applied to the GeoTiff.
     * `clip` - (optional, default = undefined) Clipping polygon, provided as an array of [lat,lon] coordinates.  Note that this is the Leaflet [lat,lon] convention, not geoJSON [lon,lat].
     * `renderer` - Renderer to use (see below).
 
