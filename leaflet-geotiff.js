@@ -8,40 +8,40 @@
 // Note this will only work with ESPG:4326 tiffs
 
 if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
-	var L = require('leaflet');
-	var GeoTIFF = require('geotiff');
+    var L = require('leaflet');
+    var GeoTIFF = require('geotiff');
 }
 
 L.LeafletGeotiff = L.ImageOverlay.extend({
-	
-	options: {
-		arrowSize: 20,
-		band: 0,
-		image: 0,
-		opacity: 1,
-		renderer: null
-	},
-	
+    
+    options: {
+        arrowSize: 20,
+        band: 0,
+        image: 0,
+        opacity: 1,
+        renderer: null
+    },
+    
     initialize: function (url, options) { 
         if(typeof(GeoTIFF) === 'undefined'){
             throw new Error("GeoTIFF not defined");
         };
 
-		this._url = url;
+        this._url = url;
         this.raster = {};
         L.Util.setOptions(this, options);
 
         if (this.options.bounds) {
             this._rasterBounds = L.latLngBounds(options.bounds);
         }
-		if (this.options.renderer) {
-			this.options.renderer.setParent(this);
-		}
+        if (this.options.renderer) {
+            this.options.renderer.setParent(this);
+        }
 
         this._getData();
     },
     setURL: function(newURL) {
-		this._url = newURL;
+        this._url = newURL;
         this._getData();
     },
     onAdd: function (map) {
@@ -126,7 +126,7 @@ L.LeafletGeotiff = L.ImageOverlay.extend({
             return undefined;
         }
     },
-	_animateZoom: function (e) {
+    _animateZoom: function (e) {
         if (L.version >= "1.0") {
             var scale = this._map.getZoomScale(e.zoom),
                 offset = this._map._latLngBoundsToNewLayerBounds(this._map.getBounds(), e.zoom, e.center).min;
@@ -138,9 +138,9 @@ L.LeafletGeotiff = L.ImageOverlay.extend({
                 topLeft = this._map._latLngToNewLayerPoint(nw, e.zoom, e.center),
                 size = this._map._latLngToNewLayerPoint(se, e.zoom, e.center)._subtract(topLeft);
             this._image.style[L.DomUtil.TRANSFORM] =
-		        L.DomUtil.getTranslateString(topLeft) + ' scale(' + scale + ') ';
+                L.DomUtil.getTranslateString(topLeft) + ' scale(' + scale + ') ';
         }
-	},
+    },
     _reset: function () {
         if (this.hasOwnProperty('_map')) {
             if (this._rasterBounds) {
@@ -175,7 +175,7 @@ L.LeafletGeotiff = L.ImageOverlay.extend({
     },
     _drawImage: function () {
         if (this.raster.hasOwnProperty('data')) {
-			var args = {};
+            var args = {};
             topLeft = this._map.latLngToLayerPoint(this._map.getBounds().getNorthWest()),
             size = this._map.latLngToLayerPoint(this._map.getBounds().getSouthEast())._subtract(topLeft);
             args.rasterPixelBounds = L.bounds(this._map.latLngToContainerPoint(this._rasterBounds.getNorthWest()),this._map.latLngToContainerPoint(this._rasterBounds.getSouthEast()));
@@ -192,7 +192,7 @@ L.LeafletGeotiff = L.ImageOverlay.extend({
                 plotCanvas.width = size.x;
                 plotCanvas.height = size.y;
                 var ctx = plotCanvas.getContext("2d");
-				ctx.globalAlpha = this.options.opacity;
+                ctx.globalAlpha = this.options.opacity;
                 ctx.clearRect(0, 0, plotCanvas.width, plotCanvas.height);
                 this._image.src = plotCanvas.toDataURL();
                 return;
@@ -208,10 +208,10 @@ L.LeafletGeotiff = L.ImageOverlay.extend({
             plotCanvas.width = size.x;
             plotCanvas.height = size.y;
             var ctx = plotCanvas.getContext("2d");
-			ctx.globalAlpha = this.options.opacity;
+            ctx.globalAlpha = this.options.opacity;
             ctx.clearRect(0, 0, plotCanvas.width, plotCanvas.height);
 
-			this.options.renderer.render(this.raster, plotCanvas, ctx, args);
+            this.options.renderer.render(this.raster, plotCanvas, ctx, args);
    
             //Draw clipping polygon
             if (this.options.clip) {
@@ -231,67 +231,67 @@ L.LeafletGeotiff = L.ImageOverlay.extend({
         }
     },
 
-	transform: function(rasterImageData, args) {
-		//Create image data and Uint32 views of data to speed up copying
-		var imageData = new ImageData(args.plotWidth, args.plotHeight);
-		var outData = imageData.data;
-		var outPixelsU32 = new Uint32Array(outData.buffer);
-		var inData = rasterImageData.data;
-		var inPixelsU32 = new Uint32Array(inData.buffer);
+    transform: function(rasterImageData, args) {
+        //Create image data and Uint32 views of data to speed up copying
+        var imageData = new ImageData(args.plotWidth, args.plotHeight);
+        var outData = imageData.data;
+        var outPixelsU32 = new Uint32Array(outData.buffer);
+        var inData = rasterImageData.data;
+        var inPixelsU32 = new Uint32Array(inData.buffer);
 
-		var zoom = this._map.getZoom();
-		var scale = this._map.options.crs.scale(zoom);
-		var d = 57.29577951308232; //L.LatLng.RAD_TO_DEG;
+        var zoom = this._map.getZoom();
+        var scale = this._map.options.crs.scale(zoom);
+        var d = 57.29577951308232; //L.LatLng.RAD_TO_DEG;
 
-		var transformationA = this._map.options.crs.transformation._a;
-		var transformationB = this._map.options.crs.transformation._b;
-		var transformationC = this._map.options.crs.transformation._c;
-		var transformationD = this._map.options.crs.transformation._d;
-		if (L.version >= "1.0") {
-			transformationA = transformationA*this._map.options.crs.projection.R;
-			transformationC = transformationC*this._map.options.crs.projection.R;
-		}
+        var transformationA = this._map.options.crs.transformation._a;
+        var transformationB = this._map.options.crs.transformation._b;
+        var transformationC = this._map.options.crs.transformation._c;
+        var transformationD = this._map.options.crs.transformation._d;
+        if (L.version >= "1.0") {
+            transformationA = transformationA*this._map.options.crs.projection.R;
+            transformationC = transformationC*this._map.options.crs.projection.R;
+        }
 
-		for (var y=0;y<args.plotHeight;y++) {
-			var yUntransformed = ((args.yOrigin+y) / scale - transformationD) / transformationC;
-			var currentLat = (2 * Math.atan(Math.exp(yUntransformed)) - (Math.PI / 2)) * d;
-			var rasterY = this.raster.height-Math.ceil((currentLat - this._rasterBounds._southWest.lat)/args.latSpan);
+        for (var y=0;y<args.plotHeight;y++) {
+            var yUntransformed = ((args.yOrigin+y) / scale - transformationD) / transformationC;
+            var currentLat = (2 * Math.atan(Math.exp(yUntransformed)) - (Math.PI / 2)) * d;
+            var rasterY = this.raster.height-Math.ceil((currentLat - this._rasterBounds._southWest.lat)/args.latSpan);
 
-			for (var x=0;x<args.plotWidth;x++) {
-				//Location to draw to
-				var index = (y*args.plotWidth+x);
+            for (var x=0;x<args.plotWidth;x++) {
+                //Location to draw to
+                var index = (y*args.plotWidth+x);
 
-				//Calculate lat-lng of (x,y)
-				//This code is based on leaflet code, unpacked to run as fast as possible
-				//Used to deal with TIF being EPSG:4326 (lat,lon) and map being EPSG:3857 (m E,m N)
-				var xUntransformed = ((args.xOrigin+x) / scale - transformationB) / transformationA;
-				var currentLng = xUntransformed * d;
-				var rasterX = Math.floor((currentLng - this._rasterBounds._southWest.lng)/args.lngSpan); 
+                //Calculate lat-lng of (x,y)
+                //This code is based on leaflet code, unpacked to run as fast as possible
+                //Used to deal with TIF being EPSG:4326 (lat,lon) and map being EPSG:3857 (m E,m N)
+                var xUntransformed = ((args.xOrigin+x) / scale - transformationB) / transformationA;
+                var currentLng = xUntransformed * d;
+                var rasterX = Math.floor((currentLng - this._rasterBounds._southWest.lng)/args.lngSpan); 
 
-				var rasterIndex = (rasterY*this.raster.width+rasterX);
+                var rasterIndex = (rasterY*this.raster.width+rasterX);
 
-				//Copy pixel value
-				outPixelsU32[index] = inPixelsU32[rasterIndex];
-			}
-		}
-		return imageData;
-	}
+                //Copy pixel value
+                outPixelsU32[index] = inPixelsU32[rasterIndex];
+            }
+        }
+        return imageData;
+    }
 
 });
 
 L.LeafletGeotiffRenderer = L.Class.extend({
-	
-	initialize: function(options) {		
+    
+    initialize: function(options) {        
         L.setOptions(this, options);
-	},
+    },
 
-	setParent: function(parent) {
-		this.parent = parent;
-	},
+    setParent: function(parent) {
+        this.parent = parent;
+    },
 
-	render: function(raster, canvas, ctx, args) {
-		throw new Error('Abstract class');
-	}
+    render: function(raster, canvas, ctx, args) {
+        throw new Error('Abstract class');
+    }
 
 });
 
@@ -300,5 +300,5 @@ L.leafletGeotiff = function (url, options) {
 };
 
 if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
-	module.exports = L;
+    module.exports = L;
 }
