@@ -195,6 +195,7 @@ L.LeafletGeotiff = L.ImageOverlay.extend({
                 ctx.globalAlpha = this.options.opacity;
                 ctx.clearRect(0, 0, plotCanvas.width, plotCanvas.height);
                 this._image.src = plotCanvas.toDataURL();
+				this._image.style.opacity = this.options.opacity;
                 return;
             }
 
@@ -228,6 +229,7 @@ L.LeafletGeotiff = L.ImageOverlay.extend({
             }
             
             this._image.src = String(plotCanvas.toDataURL());
+            this._image.style.opacity = this.options.opacity;
         }
     },
 
